@@ -24,7 +24,7 @@ client.Dispatcher.on(Events.MESSAGE_CREATE, e => {
 		var bot = new cleverbot(cleverBotLogin[0], cleverBotLogin[1]);
 		bot.setNick("cleverbot")
 		bot.create(function (err, cleverbot) {
-			bot.ask(msg.substring(24,msg.length), function (err, response) {
+			bot.ask(msg.substring(("<@"+client.User.id+">").length,msg.length), function (err, response) {
 				e.message.channel.sendMessage(response);
 			});
 		});
