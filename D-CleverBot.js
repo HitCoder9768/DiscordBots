@@ -9,6 +9,7 @@ var cleverbot = require("cleverbot.io");
 
 const Events = Discordie.Events;
 const client = new Discordie();
+var bot = new cleverbot(cleverBotLogin[0], cleverBotLogin[1]);
 
 client.connect({
 	token: botToken
@@ -22,7 +23,6 @@ client.Dispatcher.on(Events.GATEWAY_READY, e => {
 client.Dispatcher.on(Events.MESSAGE_CREATE, e => {
 	var msg = e.message.content;
 	if (msg.indexOf("<@"+client.User.id+">") !== -1){
-		var bot = new cleverbot(cleverBotLogin[0], cleverBotLogin[1]);
 		bot.setNick("cleverbot")
 		bot.create(function (err, cleverbot) {
 			bot.ask(msg.substring(("<@"+client.User.id+">").length,msg.length), function (err, response) {
