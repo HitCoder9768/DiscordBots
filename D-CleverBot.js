@@ -25,7 +25,7 @@ client.Dispatcher.on(Events.MESSAGE_CREATE, e => {
 	if (msg.indexOf("<@"+client.User.id+">") !== -1){
 		bot.setNick("cleverbot")
 		bot.create(function (err, cleverbot) {
-			bot.ask(msg.substring(("<@"+client.User.id+">").length,msg.length), function (err, response) {
+			bot.ask(msg.replace("<@"+client.User.id+">",""), function (err, response) {
 				e.message.channel.sendMessage(response);
 			});
 		});
