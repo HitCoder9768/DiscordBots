@@ -1,7 +1,7 @@
 const prefix = "!"; // This is how you want your commands prefixed.
 
 const botToken = '' // Place your bot's API key in here
-const googleApiKey = '' // Place your google API key in here
+const googleApiKey = '' // Place your youtube API key in here (https://console.developers.google.com/apis/library)
 
 //Initialise and reference the requirements
 var Discordie = require("discordie");
