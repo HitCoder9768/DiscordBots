@@ -185,17 +185,6 @@ client.Dispatcher.on(Discordie.Events.MESSAGE_CREATE, (e) => {
 				'```'
 			);
 		}
-
-		//Commands for Hybrid only;
-		if(e.message.author.id == '95661451213025280') {
-			if (command=="nowplaying"){
-				client.User.setGame(command.substring(11,command.length));
-			}
-			if (command=="setname"){
-				client.User.setUserName(command.substring(8,command.length));
-			}
-		}
-		
 	}
 });
 
