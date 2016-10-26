@@ -1,4 +1,5 @@
 // Cleverbot for Discord made by HitCoder. Feel free to reuse. This script is fairly simplistic so no credit needed.
+// When this bot is @mentioned it will respond back.
 
 const botToken = '' // Place your bot's token in here.
 const cleverBotLogin = ['API User','API Key']; // https://cleverbot.io/keys - replace API User and API Key correspondingly
