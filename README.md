@@ -3,7 +3,7 @@ Some bots for Discord using the Discordie API.
 
 Bots included for the following tasks:
 * Music player
-* Translation
+* Translation // currently does not work due to an update to the API //
 * 8Ball command
 * Cleverbot
 * Random cat
@@ -37,7 +37,7 @@ Some of these scripts require different apis and node modules;
 * `npm install xmlhttprequest`
 
 **Translator Bot requirements:**
-* `npm i headless-google-translate`
+* `npm install node-google-translate-skidz`
 
 **Cleverbot Bot requirements:**
 * `npm install cleverbot.io`
