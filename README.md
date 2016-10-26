@@ -37,7 +37,7 @@ Some of these scripts require different apis and node modules;
 * `npm install xmlhttprequest`
 
 **Translator Bot requirements:**
-* `npm install node-google-translate-skidz`
+* `npm i headless-google-translate`
 
 **Cleverbot Bot requirements:**
 * `npm install cleverbot.io`
