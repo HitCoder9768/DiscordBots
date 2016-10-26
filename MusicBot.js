@@ -14,9 +14,8 @@ var XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest;
 //Create constants and global variables.
 const Events = Discordie.Events;
 const client = new Discordie();
-var songREQUEST = {};
-var currentPlaying;
-var helpEnabled = true;
+var sReqList = {};
+var nowPlaying;
 var ytdlInProgress = false;
 var isPlaying = false;
 
@@ -82,8 +81,8 @@ client.Dispatcher.on(Discordie.Events.MESSAGE_CREATE, (e) => {
 
 		//Check what song is playing and whom requested it.
 		if (command=="playing"){
-			if((playing) && (currentPlaying)) {
-				e.message.channel.sendMessage('```Currently playing... "'+currentPlaying[0]+'" - Requested by '+currentPlaying[1]+'```\n'+currentPlaying[2]);
+			if((playing) && (nowPlaying)) {
+				e.message.channel.sendMessage('```Currently playing... "'+nowPlaying[0]+'" - Requested by '+nowPlaying[1]+'```\n'+nowPlaying[2]);
 			}else{
 				e.message.channel.sendMessage("/shrug Apparently the queue is empty.")
 			}
@@ -134,11 +133,11 @@ client.Dispatcher.on(Discordie.Events.MESSAGE_CREATE, (e) => {
 
 		//check the queue
 		if (command=="queue"){
-			var keys = Object.keys(songREQUEST);
+			var keys = Object.keys(sReqList);
 			if (keys.length<=0){ e.message.channel.sendMessage("The queue is empty."); return;}
 			var qList = "```";
 			for (i = 0; i < keys.length; i++){
-				var qIndex = [songREQUEST[keys[i]]['title'],songREQUEST[keys[i]]['user']];
+				var qIndex = [sReqList[keys[i]]['title'],sReqList[keys[i]]['user']];
 				qList = qList+'"'+qIndex[0]+'" - Requested by '+qIndex[1]+"\n\n";
 			}
 			qList = qList+"```";
@@ -153,14 +152,14 @@ client.Dispatcher.on(Discordie.Events.MESSAGE_CREATE, (e) => {
 				playing = false;
 				
 				setTimeout(function() {
-					var delKeys = Object.keys(songREQUEST);
-					fs.unlink(songREQUEST[delKeys[0]]['filename'],function(err) {
+					var delKeys = Object.keys(sReqList);
+					fs.unlink(sReqList[delKeys[0]]['filename'],function(err) {
 						if(err) {
 							return console.log(err);
 						}
 					});
-					var title = songREQUEST[delKeys[0]]['title'];
-					delete songREQUEST[delKeys[0]];
+					var title = sReqList[delKeys[0]]['title'];
+					delete sReqList[delKeys[0]];
 					e.message.channel.sendMessage('```Skipped "'+title+'"```');
 					
 					start();
@@ -236,14 +235,14 @@ function addSONG(userID,user,url,title,videoID) {
 	.pipe(fs.createWriteStream(videoID+'.mp3'))
 	.on('finish', function(){
 		//Add to the Queue with relevant information
-		songREQUEST[videoID] = {
+		sReqList[videoID] = {
 			'filename': videoID+'.mp3',
 			'title': title,
 			'user': user,
 			'userID': userID,
 			'URL': url
 		};
-		console.log(songREQUEST[videoID]);
+		console.log(sReqList[videoID]);
 		ytdlInProgress = false;
 	});
 	
@@ -270,10 +269,10 @@ function start(vCI){
 	stopPlaying = false;
 
 	// Check there is something in the queue.
-	var keys = Object.keys(songREQUEST);
+	var keys = Object.keys(sReqList);
 	if (keys.length > 0){
-		var file = songREQUEST[keys[0]]['filename'];
-		currentPlaying = [songREQUEST[keys[0]]['title'],songREQUEST[keys[0]]['user'],songREQUEST[keys[0]]['URL']];
+		var file = sReqList[keys[0]]['filename'];
+		nowPlaying = [sReqList[keys[0]]['title'],sReqList[keys[0]]['user'],sReqList[keys[0]]['URL']];
 		var stats = fs.statSync(file)
  		var fileSizeInBytes = stats["size"]
  		if (fileSizeInBytes<=1000){
@@ -291,12 +290,12 @@ function start(vCI){
 		if (!ffmpeg) return console.log("Voice connection is no longer valid");
 		ffmpeg.once("end", () => {
 			if (stopPlaying) return;
-			fs.unlink(songREQUEST[keys[0]]['filename'],function(err) {
+			fs.unlink(sReqList[keys[0]]['filename'],function(err) {
 				if(err) {
 					return console.log(err);
 				}
 			});
-			delete songREQUEST[keys[0]];
+			delete sReqList[keys[0]];
 			isPlaying = false;
 			setTimeout(start, 100, vCI);
 		});
